@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BloomBlock - Instant Urban Garden Plots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Noto+Sans&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      font-family: 'Noto Sans', sans-serif;
+      background: #FFFFFF;
+      color: #111111;
+      line-height: 1.6;
+      font-size: 16px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem 1rem;
+    }
+    body {
+      max-width: 600px;
+      width: 100%;
+    }
+    h1, h2, h3 {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 0.5em;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.75em;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6em;
+    }
+    p {
+      color: #111111;
+      margin-bottom: 1rem;
+      letter-spacing: 0.02em;
+      font-size: 1rem;
+      text-align: center;
+    }
+    a, button {
+      font-family: 'Noto Sans JP', sans-serif;
+      text-decoration: none;
+      color: #A67F5D;
+      border: 1px solid #A67F5D;
+      padding: 0.5em 1.5em;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      border-radius: 0;
+      display: inline-block;
+      text-align: center;
+    }
+    a:hover, button:hover {
+      background-color: #A67F5D;
+      color: #FFFFFF;
+    }
+    form {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    input[type="email"] {
+      padding: 0.5em;
+      font-size: 1rem;
+      border: 1px solid #E5E5E5;
+      border-radius: 0;
+      outline-offset: 2px;
+    }
+    input[type="email"]:focus {
+      border-color: #A67F5D;
+      outline: none;
+    }
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      text-align: center;
+      color: #777777;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>BloomBlock</h1>
+    <h2>Skip the 9-Year Waitlist for a Community Garden Plot</h2>
+    <p>Instant access to private garden beds in your neighborhood, fully insured with $1M liability coverage. Grow your wellness, food, and community effortlessly.</p>
+    <form id="waitlistForm">
+      <label for="email">Join the Waitlist</label>
+      <input type="email" id="email" name="email" placeholder="Your email address" required aria-label="Email address" autocomplete="email" />
+      <button type="submit">Reserve Your Spot</button>
+      <p id="responseMessage" role="alert" style="text-align:center; margin-top:0.5em;"></p>
+    </form>
+    <section>
+      <h2>How It Works</h2>
+      <p>BloomBlock connects city dwellers who want to garden with private landowners offering small plots by the season. We provide trusted liability insurance, verified hosts, and professional-grade garden beds.</p>
+    </section>
+    <section>
+      <h2>Subscription Tiers</h2>
+      <table style="width:100%; border-collapse: collapse; text-align:center;">
+        <thead>
+          <tr style="border-bottom:1px solid #E5E5E5;">
+            <th style="padding: 8px 0;">Tier</th>
+            <th style="padding: 8px 0;">Price per Month</th>
+            <th style="padding: 8px 0;">Features</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #E5E5E5;">
+            <td>The Sprout</td>
+            <td>$25</td>
+            <td>Raw plot, host provides water access</td>
+          </tr>
+          <tr style="border-bottom:1px solid #E5E5E5;">
+            <td>The Bloom</td>
+            <td>$45</td>
+            <td>Pre-tilled soil, basic tools, composting access</td>
+          </tr>
+          <tr>
+            <td>The Block</td>
+            <td>$65</td>
+            <td>Raised beds, automated irrigation, sick plant concierge</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Why BloomBlock?</h2>
+      <ul style="list-style:none; padding-left:0; margin-top:0; color:#111111; text-align:left; max-width: 400px; margin-left:auto; margin-right:auto;">
+        <li>• Instant access — no 9-year waitlist</li>
+        <li>• $1M liability insurance for hosts and renters</li>
+        <li>• Trusted hosts and verified plots in your neighborhood</li>
+        <li>• Professional-grade garden beds and amenities</li>
+      </ul>
+    </section>
+  </main>
+  <script>
+    const form = document.getElementById('waitlistForm');
+    const responseMessage = document.getElementById('responseMessage');
+    const DB_ID = '6740fe20-495a-478f-b8df-901bb796c012';
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      responseMessage.textContent = '';
+      const emailInput = form.email.value;
+
+      try {
+        const res = await fetch(`https://app.baget.ai/api/public/databases/${DB_ID}/rows`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: { email: emailInput } }),
+        });
+        if (res.ok) {
+          responseMessage.style.color = 'green';
+          responseMessage.textContent = "Thanks — we'll be in touch soon.";
+          form.reset();
+        } else {
+          responseMessage.style.color = 'red';
+          responseMessage.textContent = 'Oops, something went wrong. Please try again.';
+        }
+      } catch (error) {
+        responseMessage.style.color = 'red';
+        responseMessage.textContent = 'Network error. Please check your connection and try again.';
+      }
+    });
+  </script>
+</body>
+</html>
